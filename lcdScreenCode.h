@@ -18,29 +18,29 @@ public:
 
   // Display operational status and information related to the system.
   void lcdPrint(const String &wtl, const String &wps, int smp, const String &insystem) {
-    clear();                    // Clear the LCD to prepare for new information.
-    setCursor(0, 0);            // Set cursor to the beginning of the first line.
-    print("Moist: " + String(smp) + "%");  // Display soil moisture percentage.
+    clear();                    // Clear the LCD
+    setCursor(0, 0);            // Set cursor to the beginning of the top row
+    print("Moist: " + String(smp) + "%");  // Display soil moisture percentage
     setCursor(0, 1);            // Move the cursor to the beginning of the second line.
-    print("Tank: " + wtl + " Pump: " + wps); // Display tank status and pump status.
+    print("Tank: " + wtl + " Pump: " + wps); // Display tank status and pump status
   }
 
   // Display error messages clearly on the LCD.
   void displayError(const String &error) {
-    clear();                    // Clear the screen to focus attention on the error message.
-    setCursor(0, 0);            // Position the cursor at the start of the first line.
-    print("Error:");            // Prefix the error message with "Error:".
-    setCursor(0, 1);            // Move the cursor to the second line.
-    print(error);               // Display the actual error message.
+    clear();                    // Clear the screen 
+    setCursor(0, 0);            
+    print("Error:");            //Show error message with "Error:".
+    setCursor(0, 1);            
+    print(error); // Display the actual error message, passed in by refrence when called.
   }
 
   // Display warning messages on the LCD.
   void displayWarning(const String &warning) {
-    clear();                    // Clear the LCD to ensure the warning is prominent.
-    setCursor(0, 0);            // Position the cursor at the start of the first line.
-    print("Warning:");          // Prefix the warning with "Warning:".
-    setCursor(0, 1);            // Move the cursor to the second line.
-    print(warning);             // Show the actual warning message.
+    clear();                    
+    setCursor(0, 0);            
+    print("Warning:");          // Show "Warning:".
+    setCursor(0, 1);            // 
+    print(warning);             // Show the actual warning message, passed in.
   }
 };
 

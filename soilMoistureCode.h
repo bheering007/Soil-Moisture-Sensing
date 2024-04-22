@@ -11,20 +11,24 @@ private:
     int soilPowerPin;
 
     // Constants and variables for handling and averaging the sensor readings.
-    static const int numReadings = 10;  // Fixed number of readings to average.
+   int numReadings = 10;  // Fixed number of readings to average.
     int readings[numReadings];          // Array to store past readings.
     int readIndex = 0;                  // Current index in the readings array.
     int total = 0;                      // Sum of the readings in the array.
     int average = 0;                    // Calculated average of the readings.
     
     // Constants and variables for error handling.
-    static const int errorValue = -1;   // Special value indicating sensor error.
-    static const int sensorLow = 200;   // Minimum expected sensor value.
-    static const int sensorHigh = 850;  // Maximum expected sensor value.
+    //do not change
+    int errorValue = -1;   // Special value indicating sensor error.
+    int sensorLow = 200;   // Minimum expected sensor value.
+    int sensorHigh = 850;  // Maximum expected sensor value.
+    //you can change agin
     float ema = 0.0;                    // Exponential moving average of the sensor readings.
-    const float alpha = 0.1;            // Smoothing factor for EMA calculation.
+    //dont change
+    float alpha = 0.1;            // Smoothing factor for EMA calculation.
     int errorCount = 0;                 // Counter for consecutive sensor errors.
-    const int maxErrorCount = 3;        // Threshold for maximum allowable consecutive errors.
+    //dont change this either lol
+    int maxErrorCount = 3;        // Threshold for maximum allowable consecutive errors.
 
 public:
     // Constructor initializes sensor pins and prepares the sensor.
@@ -66,16 +70,18 @@ public:
   - Handling Sensor Data: https://learn.sparkfun.com/tutorials/soil-moisture-sensor-hookup-guide
   - Circular Buffer for Data Smoothing: https://en.wikipedia.org/wiki/Circular_buffer
   - Error Handling in Sensor Readings: https://www.embedded.com/design/prototyping-and-development/4008246/Error-handling-in-real-time-measurement-applications
+
+  - C++ code for EMA algorithom https://stackoverflow.com/questions/37300684/implementing-exponential-moving-average-in-c
  
  */
 
     int soilMoistLevel() {
         digitalWrite(soilPowerPin, HIGH);  // Power on the sensor.
-        delay(10);  // Short delay to stabilize sensor output.
+        delay(10);  // Short delay to stabilize sensor 
         int moistureLevel = analogRead(soilPin);  // Read moisture level from sensor.
-        digitalWrite(soilPowerPin, LOW);  // Power off the sensor.
+        digitalWrite(soilPowerPin, LOW);  // Power off the sensor
 
-        // Handle readings outside the expected range by incrementing error count.
+        // Handle readings outside the expected range by incrementing error count var
         if (moistureLevel < sensorLow || moistureLevel > sensorHigh) {
             errorCount++;
             if (errorCount > maxErrorCount) {
@@ -83,19 +89,28 @@ public:
             }
         } else {
             errorCount = 0;  // Reset error count on a valid reading.
+
             // Update the exponential moving average.
             ema = alpha * moistureLevel + (1 - alpha) * ema;
+            ema = static_cast<int>(ema); //Convert float to int for int math
         }
 
         // Maintain a running total of the last 'numReadings' EMA values for averaging.
+
+        // Subtracts the oldest reading in the buffer from the running total.
+        // Updates the oldest reading slot with the new EMA value.
+        //Adds this new EMA value to the running total, effectively replacing the old value in the total with the new one.
+        // Advances the index to the next position in the circular buffer, wrapping around if the end is reached.
+        //Computes the average of the readings by dividing the total by the number of readings
         total -= readings[readIndex];
-        readings[readIndex] = static_cast<int>(ema);
+        readings[readIndex] = ema;
         total += readings[readIndex];
         readIndex = (readIndex + 1) % numReadings;
         average = total / numReadings;
 
-        // Convert the EMA value to a percentage for consistency.
-        return map(static_cast<int>(ema), sensorLow, sensorHigh, 0, 100);
+
+        // Convert the EMA value to a percentage 
+        return map(ema, sensorLow, sensorHigh, 0, 100);
     }
 
     // Provides a smoothed average moisture level based on recent readings.
