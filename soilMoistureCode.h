@@ -11,7 +11,7 @@ private:
     int soilPowerPin;
 
     // Constants and variables for handling and averaging the sensor readings.
-   int numReadings = 10;  // Fixed number of readings to average.
+   const static int numReadings = 10;  // Fixed number of readings to average.
     int readings[numReadings];          // Array to store past readings.
     int readIndex = 0;                  // Current index in the readings array.
     int total = 0;                      // Sum of the readings in the array.
@@ -21,7 +21,7 @@ private:
     //do not change
     int errorValue = -1;   // Special value indicating sensor error.
     int sensorLow = 200;   // Minimum expected sensor value.
-    int sensorHigh = 850;  // Maximum expected sensor value.
+    int sensorHigh = 950;  // Maximum expected sensor value.
     //you can change agin
     float ema = 0.0;                    // Exponential moving average of the sensor readings.
     //dont change

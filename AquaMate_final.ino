@@ -65,7 +65,7 @@ A5-> potentiometer middle pin
 #include <avr/sleep.h>
 
 // Define constants for pin assignments
-//Using recommended standard names for pins
+
 #define SOIL_POWER_PIN 8
 #define SOIL_SENSOR_PIN A0
 #define PUMP_PIN 11
@@ -87,31 +87,38 @@ bool isPumping = false;
 // Setup 
 void setup() {
   Serial.begin(9600); // Start serial communication for debug
+
+
   pinMode(SOIL_POWER_PIN, OUTPUT); // Set the power pin for the soil sensor as output.
   digitalWrite(SOIL_POWER_PIN, LOW); // Ensure the power pin is initially turned off. IMPORTANT FOR SENSOR LIFETIME!!
 
-  lcd.begin(16, 2); // Initialize the LCD display
-  set_sleep_mode(SLEEP_MODE_IDLE);  // Configure the microcontroller to sleep but keep peripherals running, 
+ // set_sleep_mode(SLEEP_MODE_IDLE);  // Configure the microcontroller to sleep but keep peripherals running, 
                                     //basically stops the cpu but allows LCD and Soil sense to keep working
 }
 
 // Main loop
 void loop() {
+  Serial.print("looping");
   int currentMillis = millis(); // Get the current time in milliseconds, used for clocking
 
   performChecks(); // Perform sensor readings and main logic body
-  sleep_mode(); // Put the CPU to sleep while waiting
+  //sleep_mode(); // Put the CPU to sleep while waiting
 }
 
 // Perform sensor checks and updates to the system state.
 void performChecks() {
+
+  Serial.print("perfotm checks");
   if (!isPumping) { // check if currently pumping,
     int potValue = analogRead(POTENTIOMETER_PIN); // Read the value from the potentiometer
+    Serial.print("read pot");
     int plantType = map(potValue, 0, 1023, 1, 3); // Map the potentiometer value to a plant type (1 thru 3)
+    Serial.print("read pot and mapped");
     int soilMoisture = soilSensor.soilMoistLevel(); // Get the current soil moisture level. INCLUDES EMA ADJUSTMENT AND SMOOTHING!
+    Serial.print("got soil moisture)");
 
     if (soilMoisture == -1) {  // error is detected in the soil moisture reading
-      lcd.displayError("Soil Sensor Error"); // Display the error message on  LCD.
+      lcd.displayError("Soil Sense Error"); // Display the error message on  LCD.
       return; 
     }
 
@@ -143,10 +150,10 @@ void lcdUpdate(int plantType, int soilMoisture, int avgSoilMoisture) {
   //Check if the pump is currently active
   String pumpStatus;
   if (isPumping == true){
-    pumpStatus = "yes";
+    pumpStatus = "is";
   }
   else {
-    pumpStatus = "No";
+    pumpStatus = "not";
   }
   // Print the status to the LCD.
   lcd.lcdPrint(tankStatus, pumpStatus, avgSoilMoisture, "Plant " + String(plantType)); 

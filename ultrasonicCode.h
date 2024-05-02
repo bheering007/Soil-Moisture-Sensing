@@ -27,7 +27,7 @@ public:
         // Consider the container as not full if the distance to the surface is greater than 20 units.
         // You might adjust this threshold based on the specific application needs.
         return distance < 20;  // Return true if the measured distance is less than 20 units,
-                               // suggesting that the container is sufficiently full.
+                               // shows that the container is sufficiently full.
     }
 };
 

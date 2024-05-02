@@ -20,7 +20,13 @@ public:
   // @param duration: the time in milliseconds for which the pump should be active
   // Note: the duration parameter is currently not used to stop the pump after a specific time
   void runPump(int duration) {
-    digitalWrite(pump_pin, HIGH); // Set the pump pin to HIGH, turning the pump ON
+    digitalWrite(pump_pin, HIGH);
+   // unsigned long pumptime = millis();
+   // while (millis() - pumptime < duration){
+   //     Serial.print("pumping");
+   // }
+   // digitalWrite(pump_pin, LOW);
+     // Set the pump pin to HIGH, turning the pump ON
   }
 
   // Method to stop the water pump
